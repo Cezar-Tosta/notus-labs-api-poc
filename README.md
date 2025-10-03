@@ -2,6 +2,9 @@
 
 Interface simples para testar endpoints da API Notus Labs.
 
+## Relatórios
+Estão na pasta `documentos` deste respositório.
+
 ## Funcionalidades
 
 - Teste visual de endpoints agrupados por:
