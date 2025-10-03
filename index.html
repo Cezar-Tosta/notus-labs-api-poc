@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Notus Labs API Tester (PoC)</title>
+  <title>Notus Labs API PoC (Problemas DX)</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Notus Labs API Tester (PoC)</h1>
+    <h1>Notus Labs API PoC – Testes com Problemas de DX</h1>
     <label>
       API Key:
       <input type="password" id="apiKey" placeholder="Insira sua API Key" />
@@ -20,81 +20,74 @@
   <section>
     <h2>🔹 Smart Wallets</h2>
 
+    <!-- Problema #1, #7 -->
     <div class="test-card">
-      <h3>POST /wallets/register</h3>
-      <p><strong>O que faz:</strong> Cria uma nova Smart Wallet.</p>
-      <p><strong>Erro esperado:</strong> `WALLET_ALREADY_REGISTERED`, `FACTORY_NOT_SUPPORTED`, `403` sem API key.</p>
-      <input type="text" id="eoa" placeholder="EOA (0x...)" />
-      <input type="text" id="factory" placeholder="Factory (0x...)" />
-      <input type="text" id="salt" placeholder="Salt (opcional)" />
-      <button onclick="testWalletRegister()">Executar</button>
-      <pre id="result-wallet-register"></pre>
-    </div>
-
-    <div class="test-card">
-      <h3>GET /wallets/address</h3>
-      <p><strong>O que faz:</strong> Consulta wallet por endereço (requer EOA + factory).</p>
-      <p><strong>Erro esperado:</strong> Ignora `address`; sempre retorna wallet com `salt=0`.</p>
-      <input type="text" id="getAddress" placeholder="Endereço da wallet (0x...)" />
-      <input type="text" id="getEoa" placeholder="EOA (0x...)" />
-      <input type="text" id="getFactory" placeholder="Factory (0x...)" />
+      <h3>GET /wallets/address (Problemas #1 e #7)</h3>
+      <p><strong>⚠️ Problema:</strong> Ignora `address`; exige EOA + factory.</p>
+      <input type="text" id="getAddress" placeholder="Endereço da wallet (ex: 0x3437...)" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
+      <input type="text" id="getEoa" placeholder="EOA (0x...)" value="0x96832a27567538a804dfb8493513d7199ac63944" />
+      <input type="text" id="getFactory" placeholder="Factory" value="0x0000000000400CdFef5E2714E63d8040b700BC24" readonly />
       <button onclick="testWalletGet()">Executar</button>
       <pre id="result-wallet-get"></pre>
     </div>
 
+    <!-- Problema #2, #3, #4 -->
     <div class="test-card">
-      <h3>GET /wallets</h3>
-      <p><strong>O que faz:</strong> Lista todas as wallets do projeto.</p>
-      <button onclick="testWalletList()">Executar</button>
-      <pre id="result-wallet-list"></pre>
+      <h3>POST /wallets/register (Problemas #2, #3, #4)</h3>
+      <p><strong>⚠️ Problemas:</strong> EOA inválido → "Invalid"; salt padrão = "0"; erro 403 sem API key.</p>
+      <input type="text" id="eoaReg" placeholder="EOA (teste com '0xinvalido')" value="0x96832a27567538a804dfb8493513d7199ac63944" />
+      <input type="text" id="factoryReg" placeholder="Factory" value="0x0000000000400CdFef5E2714E63d8040b700BC24" readonly />
+      <input type="text" id="saltReg" placeholder="Salt (opcional – padrão: '0')" />
+      <button onclick="testWalletRegister()">Executar</button>
+      <pre id="result-wallet-register"></pre>
     </div>
 
+    <!-- Teste #9, #21 + Problema #5 -->
     <div class="test-card">
-      <h3>GET /wallets/{address}/portfolio</h3>
-      <p><strong>O que faz:</strong> Retorna tokens e NFTs da wallet.</p>
-      <p><strong>Erro esperado:</strong> `500` intermitente; arrays vazios se sem ativos.</p>
-      <input type="text" id="portfolioAddress" placeholder="Endereço da wallet (0x...)" />
+      <h3>GET /wallets/{address}/portfolio (Teste #9, #21 – Problema #5)</h3>
+      <p><strong>⚠️ Problema:</strong> Pode retornar `500` na 1ª chamada.</p>
+      <input type="text" id="portfolioAddress" placeholder="Endereço da wallet" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
       <button onclick="testPortfolio()">Executar</button>
       <pre id="result-portfolio"></pre>
     </div>
 
+    <!-- Teste #10, #22 -->
     <div class="test-card">
-      <h3>GET /wallets/{address}/history</h3>
-      <p><strong>O que faz:</strong> Retorna transações on-chain.</p>
-      <p><strong>Observação:</strong> Não inclui KYC ou Fiat.</p>
-      <input type="text" id="historyAddress" placeholder="Endereço da wallet (0x...)" />
+      <h3>GET /wallets/{address}/history (Teste #10, #22)</h3>
+      <input type="text" id="historyAddress" placeholder="Endereço da wallet" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
       <button onclick="testHistory()">Executar</button>
       <pre id="result-history"></pre>
     </div>
 
+    <!-- Teste #11 + Problema #6 -->
     <div class="test-card">
-      <h3>POST /wallets/{address}/deposit</h3>
-      <p><strong>O que faz:</strong> Simula depósito de token ERC-20.</p>
-      <p><strong>Erro esperado:</strong> `500` em vez de `400` para saldo insuficiente.</p>
-      <input type="text" id="depositAddress" placeholder="Endereço da wallet (0x...)" />
-      <input type="text" id="tokenAddress" placeholder="Token ERC-20 (ex: USDC)" />
-      <input type="number" id="depositAmount" placeholder="Amount (em unidades mínimas)" />
-      <input type="number" id="chainId" placeholder="Chain ID (ex: 1)" />
-      <input type="text" id="fromAddress" placeholder="From Address (EOA)" />
+      <h3>POST /wallets/{address}/deposit (Teste #11 – Problema #6)</h3>
+      <p><strong>⚠️ Problema:</strong> Saldo insuficiente → `500` (deveria ser `400`).</p>
+      <input type="text" id="depositAddress" placeholder="Endereço da wallet" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
+      <input type="text" id="tokenAddr" placeholder="Token ERC-20 (USDC)" value="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" />
+      <input type="number" id="depositAmount" placeholder="Amount (ex: 1000000)" value="1000000" />
+      <input type="number" id="chainIdDep" placeholder="Chain ID" value="1" />
+      <input type="text" id="fromAddr" placeholder="From Address (EOA)" value="0x96832a27567538a804dfb8493513d7199ac63944" />
       <button onclick="testDeposit()">Executar</button>
       <pre id="result-deposit"></pre>
     </div>
 
+    <!-- Teste #12 + Problema #8 -->
     <div class="test-card">
-      <h3>PATCH /wallets/{address}/metadata</h3>
-      <p><strong>O que faz:</strong> Atualiza metadados da wallet com objeto JSON.</p>
-      <input type="text" id="metaWalletAddress" placeholder="Endereço da wallet (0x...)" />
-      <textarea id="walletMetadata" placeholder='{"name":"Minha Wallet","tag":"test"}'></textarea>
+      <h3>PATCH /wallets/{address}/metadata (Teste #12)</h3>
+      <p><strong>✅ Aceita:</strong> objeto JSON.</p>
+      <input type="text" id="metaWalletAddr" placeholder="Endereço da wallet" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
+      <textarea id="walletMeta" placeholder='{"name":"Minha Wallet","tag":"test"}'>{"name":"Minha Wallet","tag":"test"}</textarea>
       <button onclick="testUpdateWalletMetadata()">Executar</button>
       <pre id="result-wallet-meta"></pre>
     </div>
 
+    <!-- Teste #13 + Problema #8 -->
     <div class="test-card">
-      <h3>PATCH /wallets/transactions/{id}/metadata</h3>
-      <p><strong>O que faz:</strong> Atualiza metadados de transação com string.</p>
-      <p><strong>Erro esperado:</strong> `400` se enviar objeto em vez de string.</p>
-      <input type="text" id="txId" placeholder="Transaction ID" />
-      <input type="text" id="txMetadata" placeholder="Metadata (string)" />
+      <h3>PATCH /wallets/transactions/{id}/metadata (Teste #13 – Problema #8)</h3>
+      <p><strong>⚠️ Aceita apenas:</strong> string (não objeto).</p>
+      <input type="text" id="txIdMeta" placeholder="Transaction ID (ex: invalid-id)" value="invalid-id" />
+      <input type="text" id="txMeta" placeholder="Metadata (string)" value="Test transaction for DX research" />
       <button onclick="testUpdateTxMetadata()">Executar</button>
       <pre id="result-tx-meta"></pre>
     </div>
@@ -104,29 +97,43 @@
   <section>
     <h2>🔹 KYC</h2>
 
+    <!-- Teste #14 + Problema #9 -->
     <div class="test-card">
-      <h3>POST /kyc/individual-verification-sessions/standard</h3>
-      <p><strong>O que faz:</strong> Cria sessão KYC.</p>
-      <p><strong>Erro esperado:</strong> `400` se faltar campos obrigatórios (documentação inconsistente).</p>
-      <button onclick="testKycCreate()">Executar</button>
+      <h3>POST /kyc/.../standard (Teste #14 – Problema #9)</h3>
+      <p><strong>⚠️ Problema:</strong> Documentação diz que campos são opcionais, mas são obrigatórios.</p>
+      <button onclick="testKycCreate()">Executar (com todos os campos)</button>
       <pre id="result-kyc-create"></pre>
     </div>
 
+    <!-- Teste #18 -->
     <div class="test-card">
-      <h3>GET /kyc/individual-verification-sessions/standard/{sessionId}</h3>
-      <p><strong>O que faz:</strong> Consulta status da sessão KYC.</p>
-      <input type="text" id="kycSessionId" placeholder="Session ID" />
+      <h3>POST /kyc/.../standard (Teste #18 – Campos faltando)</h3>
+      <button onclick="testKycCreateMinimal()">Executar (sem campos obrigatórios)</button>
+      <pre id="result-kyc-create-minimal"></pre>
+    </div>
+
+    <!-- Teste #15, #17 -->
+    <div class="test-card">
+      <h3>GET /kyc/.../{sessionId} (Teste #15, #17)</h3>
+      <input type="text" id="kycSessionId" placeholder="Session ID (ex: a7fd2ad4-...)" />
       <button onclick="testKycGet()">Executar</button>
       <pre id="result-kyc-get"></pre>
     </div>
 
+    <!-- Teste #16 -->
     <div class="test-card">
-      <h3>POST /kyc/.../{sessionId}/process</h3>
-      <p><strong>O que faz:</strong> Inicia processamento da sessão KYC.</p>
-      <p><strong>Observação:</strong> Retorna `204`, mas falha assincronamente se não houver documentos.</p>
+      <h3>POST /kyc/.../{sessionId}/process (Teste #16)</h3>
+      <p><strong>⚠️ Observação:</strong> Retorna `204`, mas falha assincronamente se não houver documentos.</p>
       <input type="text" id="kycProcessId" placeholder="Session ID" />
       <button onclick="testKycProcess()">Executar</button>
       <pre id="result-kyc-process"></pre>
+    </div>
+
+    <!-- Teste #19 -->
+    <div class="test-card">
+      <h3>GET /kyc/.../invalid-id (Teste #19)</h3>
+      <button onclick="testKycNotFound()">Executar</button>
+      <pre id="result-kyc-notfound"></pre>
     </div>
   </section>
 
@@ -134,10 +141,10 @@
   <section>
     <h2>🔹 Fiat</h2>
 
+    <!-- Teste #20 -->
     <div class="test-card">
-      <h3>POST /fiat/deposit/quote</h3>
-      <p><strong>O que faz:</strong> Cria cotação para depósito fiat → crypto.</p>
-      <p><strong>Erro esperado:</strong> `403 Forbidden` se KYC não aprovado ou sem habilitação.</p>
+      <h3>POST /fiat/deposit/quote (Teste #20)</h3>
+      <p><strong>⚠️ Comportamento esperado:</strong> `403` se KYC não aprovado ou sem habilitação.</p>
       <button onclick="testFiatQuote()">Executar</button>
       <pre id="result-fiat-quote"></pre>
     </div>

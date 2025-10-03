@@ -12,16 +12,11 @@ window.onload = () => {
 // Helper para chamadas
 async function callApi(method, path, body = null) {
   const apiKey = document.getElementById('apiKey').value || localStorage.getItem('notusApiKey');
-  if (!apiKey) return { error: 'API Key não fornecida' };
+  const headers = { 'Content-Type': 'application/json' };
+  if (apiKey) headers['x-api-key'] = apiKey;
 
   const url = `https://api.notus.team/api/v1${path}`;
-  const options = {
-    method,
-    headers: {
-      'x-api-key': apiKey,
-      'Content-Type': 'application/json'
-    }
-  };
+  const options = { method, headers };
   if (body) options.body = JSON.stringify(body);
 
   try {
@@ -39,16 +34,6 @@ async function callApi(method, path, body = null) {
 }
 
 // === SMART WALLETS ===
-async function testWalletRegister() {
-  const body = {
-    externallyOwnedAccount: document.getElementById('eoa').value,
-    factory: document.getElementById('factory').value,
-    salt: document.getElementById('salt').value || "0"
-  };
-  const result = await callApi('POST', '/wallets/register', body);
-  document.getElementById('result-wallet-register').textContent = JSON.stringify(result, null, 2);
-}
-
 async function testWalletGet() {
   const addr = document.getElementById('getAddress').value;
   const eoa = document.getElementById('getEoa').value;
@@ -58,9 +43,15 @@ async function testWalletGet() {
   document.getElementById('result-wallet-get').textContent = JSON.stringify(result, null, 2);
 }
 
-async function testWalletList() {
-  const result = await callApi('GET', '/wallets');
-  document.getElementById('result-wallet-list').textContent = JSON.stringify(result, null, 2);
+async function testWalletRegister() {
+  const body = {
+    externallyOwnedAccount: document.getElementById('eoaReg').value,
+    factory: document.getElementById('factoryReg').value
+  };
+  const salt = document.getElementById('saltReg').value;
+  if (salt) body.salt = salt;
+  const result = await callApi('POST', '/wallets/register', body);
+  document.getElementById('result-wallet-register').textContent = JSON.stringify(result, null, 2);
 }
 
 async function testPortfolio() {
@@ -79,19 +70,19 @@ async function testDeposit() {
   const addr = document.getElementById('depositAddress').value;
   const body = {
     amount: document.getElementById('depositAmount').value,
-    token: document.getElementById('tokenAddress').value,
-    chainId: parseInt(document.getElementById('chainId').value),
-    fromAddress: document.getElementById('fromAddress').value
+    token: document.getElementById('tokenAddr').value,
+    chainId: parseInt(document.getElementById('chainIdDep').value),
+    fromAddress: document.getElementById('fromAddr').value
   };
   const result = await callApi('POST', `/wallets/${addr}/deposit`, body);
   document.getElementById('result-deposit').textContent = JSON.stringify(result, null, 2);
 }
 
 async function testUpdateWalletMetadata() {
-  const addr = document.getElementById('metaWalletAddress').value;
+  const addr = document.getElementById('metaWalletAddr').value;
   let meta;
   try {
-    meta = JSON.parse(document.getElementById('walletMetadata').value);
+    meta = JSON.parse(document.getElementById('walletMeta').value);
   } catch (e) {
     document.getElementById('result-wallet-meta').textContent = JSON.stringify({ error: 'JSON inválido' }, null, 2);
     return;
@@ -101,8 +92,8 @@ async function testUpdateWalletMetadata() {
 }
 
 async function testUpdateTxMetadata() {
-  const txId = document.getElementById('txId').value;
-  const meta = document.getElementById('txMetadata').value;
+  const txId = document.getElementById('txIdMeta').value;
+  const meta = document.getElementById('txMeta').value;
   const result = await callApi('PATCH', `/wallets/transactions/${txId}/metadata`, { metadata: meta });
   document.getElementById('result-tx-meta').textContent = JSON.stringify(result, null, 2);
 }
@@ -110,14 +101,14 @@ async function testUpdateTxMetadata() {
 // === KYC ===
 async function testKycCreate() {
   const body = {
-    firstName: "Teste",
-    lastName: "Usuario",
-    birthDate: "1990-01-01",
+    firstName: "João",
+    lastName: "Silva",
+    birthDate: "1990-01-15",
     documentCategory: "IDENTITY_CARD",
     documentCountry: "BRAZIL",
     documentId: "123456789",
     livenessRequired: false,
-    email: "teste@example.com",
+    email: "joao@example.com",
     address: "Rua Teste, 123",
     city: "São Paulo",
     state: "SP",
@@ -125,6 +116,19 @@ async function testKycCreate() {
   };
   const result = await callApi('POST', '/kyc/individual-verification-sessions/standard', body);
   document.getElementById('result-kyc-create').textContent = JSON.stringify(result, null, 2);
+}
+
+async function testKycCreateMinimal() {
+  const body = {
+    firstName: "João",
+    lastName: "Silva",
+    birthDate: "1990-01-15",
+    documentCategory: "IDENTITY_CARD",
+    documentCountry: "BRAZIL",
+    documentId: "123456789"
+  };
+  const result = await callApi('POST', '/kyc/individual-verification-sessions/standard', body);
+  document.getElementById('result-kyc-create-minimal').textContent = JSON.stringify(result, null, 2);
 }
 
 async function testKycGet() {
@@ -137,6 +141,11 @@ async function testKycProcess() {
   const id = document.getElementById('kycProcessId').value;
   const result = await callApi('POST', `/kyc/individual-verification-sessions/standard/${id}/process`);
   document.getElementById('result-kyc-process').textContent = JSON.stringify(result, null, 2);
+}
+
+async function testKycNotFound() {
+  const result = await callApi('GET', '/kyc/individual-verification-sessions/standard/invalid-id');
+  document.getElementById('result-kyc-notfound').textContent = JSON.stringify(result, null, 2);
 }
 
 // === FIAT ===

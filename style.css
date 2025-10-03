@@ -121,11 +121,3 @@ pre:focus {
   outline: none;
   border-color: var(--pre-border-focus);
 }
-
-/* Destaque nas rotas (opcional, se quiser adicionar <code> ou destacar) */
-h3 code {
-  background: rgba(79, 195, 247, 0.15);
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: var(--accent);
-}
