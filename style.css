@@ -225,3 +225,34 @@ pre {
     font-size: 1.15rem;
   }
 }
+
+/* Botões de navegação superior */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: var(--accent-orange);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.nav-btn:hover {
+  background: #d6844d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(229, 149, 96, 0.3);
+}
