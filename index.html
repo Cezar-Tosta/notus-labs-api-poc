@@ -10,6 +10,10 @@
   <div class="container">
     <header>
       <h1>Notus Labs API PoC – Testes de Developer Experience</h1>
+      <p style="text-align: center; margin-bottom: 20px; color: white;">
+        Este PoC demonstra os principais problemas de Developer Experience (DX) identificados na API da Notus Labs.<br>
+        <strong>Detalhes completos estão nos relatórios anexos.</strong>
+      </p>
 
       <!-- Botões de navegação -->
       <div class="nav-buttons">
@@ -24,233 +28,108 @@
         </button>
       </div>
 
-      <!-- Campo API Key -->
+      <!-- Botões para relatórios -->
+      <div class="report-buttons">
+        <button class="report-btn" onclick="window.open('documentos/Diário de Bordo 1.pdf', '_blank')">Diário #1</button>
+        <button class="report-btn" onclick="window.open('documentos/Diário de Bordo 2.pdf', '_blank')">Diário #2</button>
+        <button class="report-btn" onclick="window.open('documentos/Diário de Bordo 3.pdf', '_blank')">Diário #3</button>
+        <button class="report-btn" onclick="window.open('documentos/Diário de Bordo 4.pdf', '_blank')">Diário #4</button>
+        <button class="report-btn" onclick="window.open('documentos/Diário de Bordo 5.pdf', '_blank')">Diário #5</button>
+        <button class="report-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
+      </div>
+
+      <!-- API Key -->
       <label>
-        <p style="color: white;">API Key:</p>
+        API Key:
         <input type="password" id="apiKey" placeholder="Insira sua API Key" />
       </label>
       <button onclick="saveApiKey()">Salvar</button>
     </header>
 
-    <!-- Smart Wallets -->
-    <section>
-      <h2>🔹 Smart Wallets</h2>
-
-      <!-- Problema #1, #7 -->
-      <div class="test-card">
-        <h3>GET /wallets/address (Problemas #1 e #7)</h3>
-        <p><strong>⚠️ Problema:</strong> Ignora <code>address</code>; exige EOA + factory.</p>
-        <p><strong>Resultado Esperado:</strong> Deveria retornar wallet específica por <code>address</code>. Retorna sempre wallet com <code>salt=0</code>.</p>
-        <label>address (Smart Wallet Address)</label>
-        <input type="text" id="getAddress" placeholder="0x34378c28a87ac84266211aa9b1c77caca241a659" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
-        <label>externallyOwnedAccount (EOA)</label>
-        <input type="text" id="getEoa" placeholder="0x96832a27567538a804dfb8493513d7199ac63944" value="0x96832a27567538a804dfb8493513d7199ac63944" />
-        <label>factory</label>
-        <input type="text" id="getFactory" placeholder="0x0000000000400CdFef5E2714E63d8040b700BC24" value="0x0000000000400CdFef5E2714E63d8040b700BC24" readonly />
-        <button onclick="testWalletGet()">Executar</button>
-        <pre id="result-wallet-get"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 1.pdf', '_blank')">Diário #1</button>
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 2.pdf', '_blank')">Diário #2</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Problema #2, #3, #4 -->
-      <div class="test-card">
-        <h3>POST /wallets/register (Problemas #2, #3, #4)</h3>
-        <p><strong>⚠️ Problemas:</strong> EOA inválido → "Invalid"; salt padrão = "0"; erro 403 sem API key.</p>
-        <p><strong>Resultado Esperado:</strong> Erro claro com regex; documentar valor padrão de <code>salt</code>; usar 401 se chave ausente.</p>
-        <label>externallyOwnedAccount (EOA)</label>
-        <input type="text" id="eoaReg" placeholder="0x96832a27567538a804dfb8493513d7199ac63944" value="0x96832a27567538a804dfb8493513d7199ac63944" />
-        <label>factory</label>
-        <input type="text" id="factoryReg" placeholder="0x0000000000400CdFef5E2714E63d8040b700BC24" value="0x0000000000400CdFef5E2714E63d8040b700BC24" readonly />
-        <label>salt (opcional – padrão: "0")</label>
-        <input type="text" id="saltReg" placeholder="0" />
-        <button onclick="testWalletRegister()">Executar</button>
-        <pre id="result-wallet-register"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 1.pdf', '_blank')">Diário #1</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #9, #21 + Problema #5 -->
-      <div class="test-card">
-        <h3>GET /wallets/{address}/portfolio (Teste #9, #21 – Problema #5)</h3>
-        <p><strong>⚠️ Problema:</strong> Pode retornar `500` na 1ª chamada.</p>
-        <p><strong>Resultado Esperado:</strong> Sempre 200 OK com arrays vazios se sem ativos. Nenhum dado off-chain (KYC/Fiat).</p>
-        <label>address (Smart Wallet Address)</label>
-        <input type="text" id="portfolioAddress" placeholder="0x34378c28a87ac84266211aa9b1c77caca241a659" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
-        <button onclick="testPortfolio()">Executar</button>
-        <pre id="result-portfolio"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 2.pdf', '_blank')">Diário #2</button>
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 5.pdf', '_blank')">Diário #5</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #10, #22 -->
-      <div class="test-card">
-        <h3>GET /wallets/{address}/history (Teste #10, #22)</h3>
-        <p><strong>Resultado Esperado:</strong> Sempre 200 OK com <code>transactions: []</code> se sem transações on-chain. Nenhum evento KYC ou Fiat.</p>
-        <label>address (Smart Wallet Address)</label>
-        <input type="text" id="historyAddress" placeholder="0x34378c28a87ac84266211aa9b1c77caca241a659" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
-        <button onclick="testHistory()">Executar</button>
-        <pre id="result-history"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 2.pdf', '_blank')">Diário #2</button>
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 5.pdf', '_blank')">Diário #5</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #11 + Problema #6 -->
-      <div class="test-card">
-        <h3>POST /wallets/{address}/deposit (Teste #11 – Problema #6)</h3>
-        <p><strong>⚠️ Problema:</strong> Saldo insuficiente → `500` (deveria ser `400`).</p>
-        <p><strong>Resultado Esperado:</strong> 400 Bad Request com detalhes do saldo disponível vs requerido.</p>
-        <label>address (Smart Wallet Address)</label>
-        <input type="text" id="depositAddress" placeholder="0x34378c28a87ac84266211aa9b1c77caca241a659" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
-        <label>token (Endereço do token ERC-20)</label>
-        <input type="text" id="tokenAddr" placeholder="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" value="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" />
-        <label>amount (em unidades mínimas)</label>
-        <input type="number" id="depositAmount" placeholder="1000000" value="1000000" />
-        <label>chainId</label>
-        <input type="number" id="chainIdDep" placeholder="1" value="1" />
-        <label>fromAddress (EOA de origem)</label>
-        <input type="text" id="fromAddr" placeholder="0x96832a27567538a804dfb8493513d7199ac63944" value="0x96832a27567538a804dfb8493513d7199ac63944" />
-        <button onclick="testDeposit()">Executar</button>
-        <pre id="result-deposit"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 2.pdf', '_blank')">Diário #2</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #12 + Problema #8 -->
-      <div class="test-card">
-        <h3>PATCH /wallets/{address}/metadata (Teste #12)</h3>
-        <p><strong>✅ Aceita:</strong> objeto JSON.</p>
-        <p><strong>Resultado Esperado:</strong> Atualização bem-sucedida com response completo da wallet.</p>
-        <label>address (Smart Wallet Address)</label>
-        <input type="text" id="metaWalletAddr" placeholder="0x34378c28a87ac84266211aa9b1c77caca241a659" value="0x34378c28a87ac84266211aa9b1c77caca241a659" />
-        <label>metadata (JSON object)</label>
-        <textarea id="walletMeta" placeholder='{"name":"Minha Wallet","tag":"test"}'>{"name":"Minha Wallet","tag":"test"}</textarea>
-        <button onclick="testUpdateWalletMetadata()">Executar</button>
-        <pre id="result-wallet-meta"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 2.pdf', '_blank')">Diário #2</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #13 + Problema #8 -->
-      <div class="test-card">
-        <h3>PATCH /wallets/transactions/{id}/metadata (Teste #13 – Problema #8)</h3>
-        <p><strong>⚠️ Aceita apenas:</strong> string (não objeto).</p>
-        <p><strong>Resultado Esperado:</strong> 400 Bad Request se enviar objeto; 404 se transação não existir.</p>
-        <label>transactionId</label>
-        <input type="text" id="txIdMeta" placeholder="invalid-id" value="invalid-id" />
-        <label>metadata (string)</label>
-        <input type="text" id="txMeta" placeholder="Test transaction for DX research" value="Test transaction for DX research" />
-        <button onclick="testUpdateTxMetadata()">Executar</button>
-        <pre id="result-tx-meta"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 2.pdf', '_blank')">Diário #2</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
+    <!-- ROTA 1: GET /wallets/address -->
+    <section class="test-card">
+      <h3>ROTA 1: GET /wallets/address</h3>
+      <p><strong>Problema:</strong> Não funciona só com <code>address</code>. Exige também <code>externallyOwnedAccount</code> e <code>factory</code>.</p>
+      <label>address</label>
+      <input type="text" id="r1_address" placeholder="0x..." />
+      <label>externallyOwnedAccount (opcional para teste)</label>
+      <input type="text" id="r1_eoa" placeholder="0x..." />
+      <label>factory (opcional para teste)</label>
+      <input type="text" id="r1_factory" placeholder="0x..." />
+      <button onclick="testRoute1()">Executar</button>
+      <pre id="result-r1"></pre>
     </section>
 
-    <!-- KYC -->
-    <section>
-      <h2>🔹 KYC</h2>
-
-      <!-- Teste #14 + Problema #9 -->
-      <div class="test-card">
-        <h3>POST /kyc/.../standard (Teste #14 – Problema #9)</h3>
-        <p><strong>⚠️ Problema:</strong> Documentação diz que campos são opcionais, mas são obrigatórios.</p>
-        <p><strong>Resultado Esperado:</strong> 200 OK com sessionId e URLs S3. Todos os campos devem ser obrigatórios ou documentados como tal.</p>
-        <button onclick="testKycCreate()">Executar (com todos os campos)</button>
-        <pre id="result-kyc-create"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 3.pdf', '_blank')">Diário #3</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #18 -->
-      <div class="test-card">
-        <h3>POST /kyc/.../standard (Teste #18 – Campos faltando)</h3>
-        <p><strong>Resultado Esperado:</strong> 400 Bad Request com lista de todos campos faltantes.</p>
-        <button onclick="testKycCreateMinimal()">Executar (sem campos obrigatórios)</button>
-        <pre id="result-kyc-create-minimal"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 3.pdf', '_blank')">Diário #3</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #15, #17 -->
-      <div class="test-card">
-        <h3>GET /kyc/.../{sessionId} (Teste #15, #17)</h3>
-        <p><strong>Resultado Esperado:</strong> Status inicial = <code>PENDING</code>; após processar = <code>FAILED</code> (sem documentos).</p>
-        <label>sessionId (UUID)</label>
-        <input type="text" id="kycSessionId" placeholder="a7fd2ad4-12b4-4464-bbca-0fbbafd7ef98" value="a7fd2ad4-12b4-4464-bbca-0fbbafd7ef98" />
-        <button onclick="testKycGet()">Executar</button>
-        <pre id="result-kyc-get"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 3.pdf', '_blank')">Diário #3</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #16 -->
-      <div class="test-card">
-        <h3>POST /kyc/.../{sessionId}/process (Teste #16)</h3>
-        <p><strong>Observação:</strong> Retorna `204`, mas falha assincronamente se não houver documentos.</p>
-        <p><strong>Resultado Esperado:</strong> 204 No Content (aceita requisição); status posterior = <code>FAILED</code>.</p>
-        <label>sessionId (UUID)</label>
-        <input type="text" id="kycProcessId" placeholder="a7fd2ad4-12b4-4464-bbca-0fbbafd7ef98" value="a7fd2ad4-12b4-4464-bbca-0fbbafd7ef98" />
-        <button onclick="testKycProcess()">Executar</button>
-        <pre id="result-kyc-process"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 3.pdf', '_blank')">Diário #3</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
-
-      <!-- Teste #19 -->
-      <div class="test-card">
-        <h3>GET /kyc/.../invalid-id (Teste #19)</h3>
-        <p><strong>Resultado Esperado:</strong> 404 Not Found com mensagem clara.</p>
-        <button onclick="testKycNotFound()">Executar</button>
-        <pre id="result-kyc-notfound"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 3.pdf', '_blank')">Diário #3</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
+    <!-- ROTA 2: POST /wallets/register -->
+    <section class="test-card">
+      <h3>ROTA 2: POST /wallets/register</h3>
+      <p><strong>Problemas:</strong> Mensagem genérica para EOA inválido; <code>salt</code> padrão não documentado; erro 403 impreciso sem API key.</p>
+      <label>externallyOwnedAccount</label>
+      <input type="text" id="r2_eoa" placeholder="0x..." />
+      <label>factory</label>
+      <input type="text" id="r2_factory" placeholder="0x..." />
+      <label>salt (opcional)</label>
+      <input type="text" id="r2_salt" placeholder="" />
+      <button onclick="testRoute2()">Executar</button>
+      <pre id="result-r2"></pre>
     </section>
 
-    <!-- Fiat -->
-    <section>
-      <h2>🔹 Fiat</h2>
+    <!-- ROTA 3: POST /wallets/{address}/deposit -->
+    <section class="test-card">
+      <h3>ROTA 3: POST /wallets/{address}/deposit</h3>
+      <p><strong>Problema:</strong> Saldo insuficiente → <code>500</code> em vez de <code>400</code>.</p>
+      <label>smart_wallet_address</label>
+      <input type="text" id="r3_address" placeholder="0x..." />
+      <label>token (ERC-20)</label>
+      <input type="text" id="r3_token" placeholder="0x..." />
+      <label>amount</label>
+      <input type="text" id="r3_amount" placeholder="1000000" />
+      <label>chainId</label>
+      <input type="number" id="r3_chain" placeholder="1" />
+      <label>fromAddress</label>
+      <input type="text" id="r3_from" placeholder="0x..." />
+      <button onclick="testRoute3()">Executar</button>
+      <pre id="result-r3"></pre>
+    </section>
 
-      <!-- Teste #20 -->
-      <div class="test-card">
-        <h3>POST /fiat/deposit/quote (Teste #20)</h3>
-        <p><strong>⚠️ Comportamento esperado:</strong> `403 Forbidden` se KYC não aprovado ou sem habilitação.</p>
-        <p><strong>Resultado Esperado:</strong> 403 com mensagem clara sobre pré-requisitos (KYC aprovado + habilitação).</p>
-        <button onclick="testFiatQuote()">Executar</button>
-        <pre id="result-fiat-quote"></pre>
-        <div class="db-buttons">
-          <button class="db-btn" onclick="window.open('documentos/Diário de Bordo 4.pdf', '_blank')">Diário #4</button>
-          <button class="db-btn final" onclick="window.open('documentos/Relatório Final.pdf', '_blank')">Relatório Final</button>
-        </div>
-      </div>
+    <!-- ROTA 4: PATCH /wallets/{address}/metadata -->
+    <section class="test-card">
+      <h3>ROTA 4: PATCH /wallets/{address}/metadata</h3>
+      <p><strong>Problema:</strong> Confirma que <code>GET /wallets/address</code> ignora o parâmetro <code>address</code> (sempre retorna salt=0).</p>
+      <label>smart_wallet_address</label>
+      <input type="text" id="r4_address" placeholder="0x..." />
+      <label>metadata (JSON object)</label>
+      <textarea id="r4_meta" placeholder='{"name":"Minha Wallet"}'></textarea>
+      <button onclick="testRoute4()">Executar</button>
+      <pre id="result-r4"></pre>
+    </section>
+
+    <!-- ROTA 5: PATCH /wallets/transactions/{id}/metadata -->
+    <section class="test-card">
+      <h3>ROTA 5: PATCH /wallets/transactions/{id}/metadata</h3>
+      <p><strong>Problema:</strong> Aceita apenas <code>string</code>, não objeto JSON (inconsistente com rota 4).</p>
+      <label>transactionId</label>
+      <input type="text" id="r5_id" placeholder="tx-123" />
+      <label>metadata (string)</label>
+      <input type="text" id="r5_meta" placeholder="Test transaction" />
+      <button onclick="testRoute5()">Executar</button>
+      <pre id="result-r5"></pre>
+    </section>
+
+    <!-- ROTA 6: POST /kyc/.../standard -->
+    <section class="test-card">
+      <h3>ROTA 6: POST /kyc/individual-verification-sessions/standard</h3>
+      <p><strong>Problema:</strong> Documentação diz que campos são opcionais, mas API exige todos.</p>
+      <button onclick="testRoute6()">Executar (com campos mínimos)</button>
+      <pre id="result-r6"></pre>
+    </section>
+
+    <!-- ROTA 7: POST /fiat/deposit/quote -->
+    <section class="test-card">
+      <h3>ROTA 7: POST /fiat/deposit/quote</h3>
+      <p><strong>Problema:</strong> Retorna <code>403</code> se conta não estiver habilitada para Fiat (requer KYC aprovado + aprovação manual).</p>
+      <button onclick="testRoute7()">Executar</button>
+      <pre id="result-r7"></pre>
     </section>
   </div>
 
