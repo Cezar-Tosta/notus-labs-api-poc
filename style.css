@@ -1,123 +1,227 @@
 :root {
-  --bg-primary: #121212;
-  --bg-secondary: #1e1e1e;
-  --bg-tertiary: #252525;
-  --text-primary: #e0e0e0;
-  --text-secondary: #b0b0b0;
-  --accent: #4fc3f7;
-  --accent-hover: #29b6f6;
-  --border: #333;
-  --pre-bg: #1a1a1a;
-  --pre-border: #333;
-  --pre-border-focus: #4fc3f7;
+  --bg-dark: #1d3124;
+  --bg-card: #f6f4e8;
+  --text-primary: #1d3124;
+  --text-secondary: #5d5651;
+  --accent-mint: #bacec1;
+  --accent-orange: #e59560;
+  --border-color: #d8cdc4;
+  --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  background: var(--bg-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-dark);
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.7;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(186, 206, 193, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(186, 206, 193, 0.03) 0%, transparent 25%);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Centralização principal */
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 header {
   margin-bottom: 30px;
   padding-bottom: 15px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
 }
 
 header h1 {
-  margin: 0 0 16px;
-  color: var(--accent);
+  color: var(--accent-mint);
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0 0 20px;
+}
+
+label {
+  display: block;
+  margin: 12px 0 6px;
   font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 input, textarea, button {
-  margin: 6px 6px 10px 0;
+  margin: 6px 0 12px;
   padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-card);
   color: var(--text-primary);
   font-size: 14px;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: var(--text-secondary);
-}
-
-input[type="text"],
-input[type="number"],
-textarea {
+  font-family: 'Inter', sans-serif;
   width: 100%;
   box-sizing: border-box;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: #8a827a;
+}
+
 button {
-  background: var(--accent);
-  color: #000;
-  font-weight: bold;
+  background: var(--accent-orange);
+  color: white;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: var(--transition);
   border: none;
+  padding: 10px 16px;
+  width: auto;
+  display: inline-block;
 }
 
 button:hover {
-  background: var(--accent-hover);
+  background: #d6844d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .test-card {
-  background: var(--bg-secondary);
-  padding: 18px;
-  margin-bottom: 24px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px;
+  margin-bottom: 28px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.test-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 h2 {
   margin-top: 40px;
-  color: var(--accent);
-  font-weight: 600;
-  border-left: 3px solid var(--accent);
-  padding-left: 12px;
+  color: var(--accent-mint);
+  font-weight: 700;
+  font-size: 1.6rem;
+  border-left: 4px solid var(--accent-mint);
+  padding-left: 14px;
 }
 
 h3 {
-  margin: 12px 0 10px;
-  color: #81d4fa;
-  font-weight: 500;
+  margin: 14px 0 12px;
+  color: var(--accent-orange);
+  font-weight: 600;
+  font-size: 1.25rem;
 }
 
 p {
-  margin: 6px 0;
+  margin: 8px 0;
   color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+code {
+  background: #f0e8e0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  color: var(--text-primary);
+  font-size: 0.95em;
 }
 
 pre {
-  background: var(--pre-bg);
-  padding: 14px;
-  border-radius: 8px;
+  background: #f8f4ee;
+  padding: 18px;
+  border-radius: 12px;
   overflow-x: auto;
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-all;
-  font-family: 'Courier New', monospace;
+  font-family: 'Fira Code', monospace;
   font-size: 14px;
-  border: 1px solid var(--pre-border);
+  border: 1px solid var(--border-color);
   max-height: 300px;
-  margin-top: 10px;
-  transition: border-color 0.2s;
+  margin-top: 14px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.04);
 }
 
-pre:focus {
-  outline: none;
-  border-color: var(--pre-border-focus);
+/* Botões dos Diários de Bordo */
+.db-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.db-btn {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.db-btn:hover {
+  background: var(--accent-mint);
+  border-color: var(--accent-mint);
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(186, 206, 193, 0.3);
+}
+
+.db-btn.final {
+  background: var(--accent-orange);
+  color: white;
+  border-color: var(--accent-orange);
+}
+
+.db-btn.final:hover {
+  background: #d6844d;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Scroll global */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 5px;
+  border: 2px solid var(--bg-dark);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-orange);
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .container {
+    padding: 0 16px;
+  }
+  h2 {
+    font-size: 1.45rem;
+    padding-left: 12px;
+  }
+  h3 {
+    font-size: 1.15rem;
+  }
 }

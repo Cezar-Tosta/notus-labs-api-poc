@@ -87,14 +87,14 @@ async function testUpdateWalletMetadata() {
     document.getElementById('result-wallet-meta').textContent = JSON.stringify({ error: 'JSON inválido' }, null, 2);
     return;
   }
-  const result = await callApi('PATCH', `/wallets/${addr}/metadata`, { metadata: meta });
+  const result = await callApi('PATCH', `/wallets/${addr}/metadata`, { meta: meta });
   document.getElementById('result-wallet-meta').textContent = JSON.stringify(result, null, 2);
 }
 
 async function testUpdateTxMetadata() {
   const txId = document.getElementById('txIdMeta').value;
   const meta = document.getElementById('txMeta').value;
-  const result = await callApi('PATCH', `/wallets/transactions/${txId}/metadata`, { metadata: meta });
+  const result = await callApi('PATCH', `/wallets/transactions/${txId}/metadata`, { meta: meta });
   document.getElementById('result-tx-meta').textContent = JSON.stringify(result, null, 2);
 }
 
